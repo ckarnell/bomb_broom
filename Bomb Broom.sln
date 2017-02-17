@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2008
+
+Project("{2998CB98-AF58-8DDD-DD0B-0F5F4A24216A}") = "Bomb Broom", "Assembly-CSharp.csproj", "{F164E210-6C55-F15F-A860-ED6F46EB693E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F164E210-6C55-F15F-A860-ED6F46EB693E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F164E210-6C55-F15F-A860-ED6F46EB693E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F164E210-6C55-F15F-A860-ED6F46EB693E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F164E210-6C55-F15F-A860-ED6F46EB693E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal

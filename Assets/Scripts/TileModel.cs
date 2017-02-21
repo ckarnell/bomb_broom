@@ -11,6 +11,7 @@ public class TileModel : MonoBehaviour {
 
     public Material materialIdle;
     public Material materialMouseOver;
+	public Material materialMouseDown;
 
     // Adjacent tiles
     public TileModel bottomRightOuter; // Only on rightside up triangles.
@@ -52,31 +53,52 @@ public class TileModel : MonoBehaviour {
 
 	void OnMouseDown()
 	{
+		Renderer renderer = GetComponent<Renderer>();
+		renderer.material = materialMouseDown;
 		Debug.Log (ID);
 	}
 
 	// Use this for initialization
 	void Start () {
+		// Name the tiles for much easier debugging
+		gameObject.name = "Tile " + ID.ToString ();
+
 		// Assign bordering tiles
-		// Start with the ones that aren't orientation specific
 		TileModel[] tiles = BuildGrid.allTiles;
-		if(isInBounds(tiles, ID - tilesPerRow + 1)) {bottomRight = tiles[ID - tilesPerRow + 1];}
-		if (isInBounds (tiles, ID - tilesPerRow))   {bottom = tiles[ID - tilesPerRow];}
-		if(isInBounds(tiles, ID - tilesPerRow - 1)) {bottomLeft = tiles[ID - tilesPerRow - 1];}
-		if(isInBounds(tiles, ID - 2)) {leftOuter = tiles [ID - 2];}
-		if(isInBounds(tiles, ID - 1)) {left = tiles [ID - 1];}
-		if(isInBounds(tiles, ID + tilesPerRow - 1)) {topLeft = tiles[ID + tilesPerRow - 1];}
+		if (isInBounds (tiles, ID - tilesPerRow)) {bottom = tiles [ID - tilesPerRow];}
 		if(isInBounds(tiles, ID + tilesPerRow)) {top = tiles[ID + tilesPerRow];}
-		if(isInBounds(tiles, ID + tilesPerRow + 1)) {topRight = tiles[ID + tilesPerRow + 1];}
-		if(isInBounds(tiles, ID + 2)) {rightOuter = tiles [ID + 2];}
-		if(isInBounds(tiles, ID + 1)) {right = tiles [ID + 1];}
-		// Now assign orientation specific bordering tiles
-		if (isUpsideDown) {
-			if(isInBounds(tiles, ID + tilesPerRow - 2)) {topLeftOuter = tiles[ID + tilesPerRow - 2];}
-			if(isInBounds(tiles, ID + tilesPerRow + 2)) {topRightOuter = tiles[ID + tilesPerRow + 2];}
-		} else {
-			if(isInBounds(tiles, ID - tilesPerRow - 2)) {bottomLeftOuter = tiles[ID - tilesPerRow - 2];}
-			if(isInBounds(tiles, ID - tilesPerRow + 2)) {bottomRightOuter = tiles[ID - tilesPerRow + 2];}
+
+		// Assign upper, outter, and bottom left adjacent tiles
+		if (ID % tilesPerRow != 0) {
+			if (isInBounds (tiles, ID - tilesPerRow - 1)) {bottomLeft = tiles [ID - tilesPerRow - 1];}
+			if (isInBounds (tiles, ID - 1)) {left = tiles [ID - 1];}
+			if (isInBounds(tiles, ID + tilesPerRow - 1)) {topLeft = tiles[ID + tilesPerRow - 1];}
+
+			if ((ID - 1) % tilesPerRow != 0) {
+				if (isInBounds(tiles, ID - 2)) {leftOuter = tiles [ID - 2];}
+				if (isUpsideDown) {
+					if (isInBounds (tiles, ID + tilesPerRow - 2)) {topLeftOuter = tiles [ID + tilesPerRow - 2];}
+				} else {
+					if (isInBounds(tiles, ID - tilesPerRow - 2)) {bottomLeftOuter = tiles[ID - tilesPerRow - 2];}
+				}
+			}
+
+		}
+
+		// Assign upper, outter, and bottom right adjacent tiles
+		if (ID % tilesPerRow != tilesPerRow - 1) {
+			if (isInBounds (tiles, ID - tilesPerRow + 1)) {bottomRight = tiles [ID - tilesPerRow + 1];}
+			if(isInBounds(tiles, ID + tilesPerRow + 1)) {topRight = tiles[ID + tilesPerRow + 1];}
+			if(isInBounds(tiles, ID + 1) && ((ID+1) % tilesPerRow != 0)) {right = tiles [ID + 1];}
+
+			if ((ID + 1) % tilesPerRow != tilesPerRow - 1) {
+				if(isInBounds(tiles, ID + 2) && ((ID+2) % tilesPerRow != 0)) {rightOuter = tiles [ID + 2];}
+				if (isUpsideDown) {
+					if (isInBounds(tiles, ID + tilesPerRow + 2)) {topRightOuter = tiles[ID + tilesPerRow + 2];}
+				} else {
+					if (isInBounds(tiles, ID - tilesPerRow + 2)) {bottomRightOuter = tiles[ID - tilesPerRow + 2];}
+				}
+			}
 		}
 	}
 	

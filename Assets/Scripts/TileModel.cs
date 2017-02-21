@@ -44,6 +44,12 @@ public class TileModel : MonoBehaviour {
         renderer.material = materialIdle;
     }
 
+	void OnMouseDown()
+	{
+		Debug.Log ("ID: ");
+		Debug.Log (ID);
+	}
+
 	// Use this for initialization
 	void Start () {
 	    

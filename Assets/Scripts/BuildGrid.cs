@@ -29,36 +29,37 @@ public class BuildGrid : MonoBehaviour {
         float yUpsideDist = 0.2886751F; // (1/3) * cos(30)
         float yTriOffsetDist = 0.8660254037F; // cos(30)
 
-        for (int xTilesCreated = 0; xTilesCreated < gridWidth; xTilesCreated += 1)
-        {
-            for (int yTilesCreated = 0; yTilesCreated < gridHeight; yTilesCreated += 1)
-            {
-                Vector3 position = new Vector3();
-                Quaternion rotation = new Quaternion();
-                if ((xTilesCreated + yTilesCreated) % 2 == 0)
-                {
-                    position = new Vector3(transform.position.x + xOffset, transform.position.y + yOffset, transform.position.z);
-                    rotation = Quaternion.identity;
-                    upsideDown = false;
-                } else
-                {
-                    position = new Vector3(transform.position.x + xOffset, transform.position.y + yOffset + yUpsideDist, transform.position.z);
-                    rotation = Quaternion.Euler(0, 0, 180);
-                    upsideDown = true;
-                }
+		// Build the grid, first rows and then columns
+		for (int yTilesCreated = 0; yTilesCreated < gridHeight; yTilesCreated += 1)
+		{
+			for (int xTilesCreated = 0; xTilesCreated < gridWidth; xTilesCreated += 1)
+			{
+				Vector3 position = new Vector3();
+				Quaternion rotation = new Quaternion();
+				if ((xTilesCreated + yTilesCreated) % 2 == 0)
+				{
+					position = new Vector3(transform.position.x + xOffset, transform.position.y + yOffset, transform.position.z);
+					rotation = Quaternion.identity;
+					upsideDown = false;
+				} else
+				{
+					position = new Vector3(transform.position.x + xOffset, transform.position.y + yOffset + yUpsideDist, transform.position.z);
+					rotation = Quaternion.Euler(0, 0, 180);
+					upsideDown = true;
+				}
 
-                TileModel new_tile = (TileModel)Instantiate(tilePrefab, position, rotation);
-                new_tile.ID = total_tiles;
-                new_tile.tilesPerRow = gridWidth;
-                new_tile.isUpsideDown = upsideDown;
-                allTiles[total_tiles] = new_tile;
-                total_tiles++;
-                yOffset += yTriOffsetDist + tilePadding;
-            }
+				TileModel new_tile = (TileModel)Instantiate(tilePrefab, position, rotation);
+				new_tile.ID = total_tiles;
+				new_tile.tilesPerRow = gridWidth;
+				new_tile.isUpsideDown = upsideDown;
+				allTiles[total_tiles] = new_tile;
+				total_tiles++;
+				xOffset += 0.5F + tilePadding;
+			}
 
-            xOffset += 0.5F + tilePadding;
-            yOffset = 0.0f;
-        }
+			xOffset = 0.0F;
+			yOffset += yTriOffsetDist + tilePadding;
+		}
 
         AssignMines();
     }

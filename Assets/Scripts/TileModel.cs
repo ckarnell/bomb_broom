@@ -31,6 +31,12 @@ public class TileModel : MonoBehaviour {
     public TileModel rightOuter;
     public TileModel right;
 
+	bool isInBounds(TileModel[] array, int id)
+	{
+		if(id >= array.Length || id < 0)
+			return false;
+		return true;
+	}
 
     void OnMouseOver()
     {
@@ -46,17 +52,36 @@ public class TileModel : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-		Debug.Log ("ID: ");
 		Debug.Log (ID);
 	}
 
 	// Use this for initialization
 	void Start () {
-	    
+		// Assign bordering tiles
+		// Start with the ones that aren't orientation specific
+		TileModel[] tiles = BuildGrid.allTiles;
+		if(isInBounds(tiles, ID - tilesPerRow + 1)) {bottomRight = tiles[ID - tilesPerRow + 1];}
+		if (isInBounds (tiles, ID - tilesPerRow))   {bottom = tiles[ID - tilesPerRow];}
+		if(isInBounds(tiles, ID - tilesPerRow - 1)) {bottomLeft = tiles[ID - tilesPerRow - 1];}
+		if(isInBounds(tiles, ID - 2)) {leftOuter = tiles [ID - 2];}
+		if(isInBounds(tiles, ID - 1)) {left = tiles [ID - 1];}
+		if(isInBounds(tiles, ID + tilesPerRow - 1)) {topLeft = tiles[ID + tilesPerRow - 1];}
+		if(isInBounds(tiles, ID + tilesPerRow)) {top = tiles[ID + tilesPerRow];}
+		if(isInBounds(tiles, ID + tilesPerRow + 1)) {topRight = tiles[ID + tilesPerRow + 1];}
+		if(isInBounds(tiles, ID + 2)) {rightOuter = tiles [ID + 2];}
+		if(isInBounds(tiles, ID + 1)) {right = tiles [ID + 1];}
+		// Now assign orientation specific bordering tiles
+		if (isUpsideDown) {
+			if(isInBounds(tiles, ID + tilesPerRow - 2)) {topLeftOuter = tiles[ID + tilesPerRow - 2];}
+			if(isInBounds(tiles, ID + tilesPerRow + 2)) {topRightOuter = tiles[ID + tilesPerRow + 2];}
+		} else {
+			if(isInBounds(tiles, ID - tilesPerRow - 2)) {bottomLeftOuter = tiles[ID - tilesPerRow - 2];}
+			if(isInBounds(tiles, ID - tilesPerRow + 2)) {bottomRightOuter = tiles[ID - tilesPerRow + 2];}
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+
 	}
 }

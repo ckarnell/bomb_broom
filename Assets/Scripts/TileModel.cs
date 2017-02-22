@@ -17,6 +17,7 @@ public class TileModel : MonoBehaviour {
 	public Material materialMouseDown;
 	public Material materialFlagged;
 	public Material materialRevealed;
+	public Material materialExploded;
 
     // Adjacent tiles
 	public List<TileModel> adjacentTiles = new List<TileModel>();
@@ -115,8 +116,23 @@ public class TileModel : MonoBehaviour {
 					if (adjacentTile.state == "idle") {adjacentTile.RevealTile();}
 				}
 			}
+		} else {
+			Explode();
 		}
 
+	}
+
+	void Explode()
+	{
+		foreach (var tile in BuildGrid.allTiles) {
+			if (tile.state == "idle") {
+				tile.state = "revealed";
+				if (tile.isMined) {
+					Renderer renderer = tile.GetComponent<Renderer>();
+					renderer.material = materialExploded;
+				}
+			}
+		}
 	}
 
     void OnMouseOver()
@@ -149,15 +165,7 @@ public class TileModel : MonoBehaviour {
 
 	void OnMouseDown()
 	{
-//		Renderer renderer = GetComponent<Renderer>();
-//		renderer.material = materialMouseDown;
-//		Debug.Log ("ID: " + ID.ToString() + "\nMines: " + mineCount.ToString() + " Mined: " + isMined.ToString());
-		Debug.Log("State: " + state);
-	}
-
-	void OnMouseUpAsButton()
-	{
-//		state = "revealed";
+//		Debug.Log("State: " + state);
 	}
 
 	// Use this for initialization

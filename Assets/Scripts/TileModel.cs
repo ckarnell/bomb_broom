@@ -8,6 +8,7 @@ public class TileModel : MonoBehaviour {
     public TextMesh displayText;
     public int tilesPerRow;
 	public int mineCount = 0;
+	public int surroundingFlagCount = 0;
 	public string state = "idle";
     public bool isMined = false;
     public bool isUpsideDown;
@@ -91,35 +92,63 @@ public class TileModel : MonoBehaviour {
 		foreach (var adjacentTile in adjacentTiles) {if (adjacentTile.isMined) mineCount++;}
 	}
 
+	void OrientText() {
+		if (isUpsideDown) {
+			Vector3 rotate = new Vector3(0, 0, 180);
+			displayText.transform.Rotate(rotate);
+			displayText.transform.position = displayText.transform.position - new Vector3(0.0F, 0.05F, 0.0F);
+		}
+	}
+
+	void ColorText() {
+		switch(mineCount)
+		{
+		case 2: displayText.color = new Color(0, 1, 0, 1); break; // Green
+		case 3: displayText.color = new Color(1, 0, 0, 1); break; // Red
+		case 4: displayText.color = new Color(1, 0, 1, 1); break; // Purple
+		case 5: displayText.color = new Color(90, 8, 27, 1); break; // Brown
+		case 6: displayText.color = new Color(0, 161, 193, 1); break; // Teal
+		case 7: displayText.color = new Color(1, 1, 1, 1); break; // Black
+		case 8: displayText.color = new Color(0.5F, 0.5F, 0.5F, 1.0F); break; // Grey
+		}
+	}
+
 	void SetFlag() {
 		Renderer renderer = GetComponent<Renderer>();
 		if (state == "idle") {
 			state = "flagged";
 			renderer.material = materialFlagged;
+			foreach (var tile in adjacentTiles) {
+				tile.surroundingFlagCount++;
+			}
 		} else if (state == "flagged") {
 			state = "idle";
 			renderer.material = materialMouseOver;
+			foreach (var tile in adjacentTiles) {
+				tile.surroundingFlagCount--;
+			}
 		}
 	}
 
 	void RevealTile()
 	{
 		Renderer renderer = GetComponent<Renderer>();
-		if (!isMined) {
-			state = "revealed";
-			renderer.material = materialRevealed;
-			if (mineCount != 0) {
-				displayText.text = mineCount.ToString();
-			} else {
-				// Recursively reveal nearby tiles if mineCount is 0
-				foreach(var adjacentTile in adjacentTiles) {
-					if (adjacentTile.state == "idle") {adjacentTile.RevealTile();}
+		if (state == "idle") {
+			if (!isMined) {
+				state = "revealed";
+				renderer.material = materialRevealed;
+				if (mineCount != 0) {
+					displayText.text = mineCount.ToString();
+				} else {
+					// Recursively reveal nearby tiles if mineCount is 0
+					foreach(var adjacentTile in adjacentTiles) {
+						if (adjacentTile.state == "idle") {adjacentTile.RevealTile();}
+					}
 				}
+			} else {
+				Explode();
 			}
-		} else {
-			Explode();
 		}
-
 	}
 
 	void Explode()
@@ -131,6 +160,15 @@ public class TileModel : MonoBehaviour {
 					Renderer renderer = tile.GetComponent<Renderer>();
 					renderer.material = materialExploded;
 				}
+			}
+		}
+	}
+
+	void RevealSurrounding()
+	{
+		if (surroundingFlagCount == mineCount) {
+			foreach (var tile in adjacentTiles) {
+				if (tile.state == "idle") {tile.RevealTile();}
 			}
 		}
 	}
@@ -151,6 +189,12 @@ public class TileModel : MonoBehaviour {
 		} else if (state == "flagged") {
 			if (Input.GetMouseButtonDown(1)) {
 				SetFlag();
+			}
+		} else if (state == "revealed") {
+			if (Input.GetMouseButtonUp(0)) {
+				if (Input.GetMouseButton(1)) {
+					RevealSurrounding();
+				}
 			}
 		}
     }
@@ -187,10 +231,14 @@ public class TileModel : MonoBehaviour {
 		if (top)              {adjacentTiles.Add(top);}
 		if (topRight)         {adjacentTiles.Add(topRight);}
 		if (topRightOuter)    {adjacentTiles.Add(topRightOuter);}
+		if (rightOuter)		  {adjacentTiles.Add(rightOuter);}
 		if (right)            {adjacentTiles.Add(right);}
 
 		// Count the surrounding adjacent mines
 		CountMines();
+
+		OrientText();
+		ColorText();
 
 	}
 	

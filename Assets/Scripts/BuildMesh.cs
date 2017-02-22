@@ -30,7 +30,6 @@ public class BuildMesh : MonoBehaviour {
         float new_adj = smaller_verts[0];
         float new_opp = smaller_verts[1];
         float new_hyp = smaller_verts[2];
-        Debug.Log(new_hyp);
         float z_offset = -0.05F;
 
         // Vertices

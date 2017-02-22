@@ -144,6 +144,10 @@ Prefab:
       propertyPath: isUpsideDown
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 10201414, guid: f0e44e8989e57134a9877c42a40b016f, type: 2}
+      propertyPath: m_FontSize
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f0e44e8989e57134a9877c42a40b016f, type: 2}
   m_IsPrefabParent: 0

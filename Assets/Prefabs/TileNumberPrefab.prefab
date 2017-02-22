@@ -142,7 +142,7 @@ TextMesh:
   m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   m_Color:
     serializedVersion: 2
-    rgba: 4278235662
+    rgba: 4291690537
 --- !u!114 &11438508
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -158,6 +158,7 @@ MonoBehaviour:
   displayText: {fileID: 10201414}
   tilesPerRow: 0
   mineCount: 0
+  surroundingFlagCount: 0
   state: idle
   isMined: 0
   isUpsideDown: 0
@@ -165,6 +166,8 @@ MonoBehaviour:
   materialMouseOver: {fileID: 2100000, guid: 022e712c54c634144bae9432cdff520c, type: 2}
   materialMouseDown: {fileID: 2100000, guid: 8d7c1997c46e9f44d843e3d133b391a8, type: 2}
   materialFlagged: {fileID: 2100000, guid: 7a14571420d9d2f4dbe8d8136157a4c2, type: 2}
+  materialRevealed: {fileID: 2100000, guid: fc5a8695c7e5fb047bc39c290b0bda3d, type: 2}
+  materialExploded: {fileID: 2100000, guid: 5479bce19d5774e479f05d3b37541695, type: 2}
   adjacentTiles: []
   bottomRightOuter: {fileID: 0}
   bottomRight: {fileID: 0}

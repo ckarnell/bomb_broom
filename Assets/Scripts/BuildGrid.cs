@@ -10,6 +10,7 @@ public class BuildGrid : MonoBehaviour {
     public int numberOfMines = 20;
     int total_tiles = 0;
     bool upsideDown = false;
+	string state = "ingame";
 
     public static TileModel[] allTiles;
     public static List<TileModel> minedTiles;
@@ -64,10 +65,16 @@ public class BuildGrid : MonoBehaviour {
         AssignMines();
     }
 
+	void OnGUI()
+	{
+		GUI.Box(new Rect(5, 5, 100, 50), state);
+	}
+
     void AssignMines()
     {
         unmindedTiles = new List<TileModel>(allTiles);
         minedTiles = new List<TileModel>();
+		int numberOfMines = 20;
 
         for (int assigned = 0; assigned < numberOfMines; ++assigned)
         {

@@ -118,12 +118,14 @@ public class TileModel : MonoBehaviour {
 		if (state == "idle") {
 			state = "flagged";
 			renderer.material = materialFlagged;
+			BuildGrid.minesRemaining--;
 			foreach (var tile in adjacentTiles) {
 				tile.surroundingFlagCount++;
 			}
 		} else if (state == "flagged") {
 			state = "idle";
 			renderer.material = materialMouseOver;
+			BuildGrid.minesRemaining++;
 			foreach (var tile in adjacentTiles) {
 				tile.surroundingFlagCount--;
 			}
@@ -137,6 +139,7 @@ public class TileModel : MonoBehaviour {
 			if (!isMined) {
 				state = "revealed";
 				renderer.material = materialRevealed;
+				CheckWinState();
 				if (mineCount != 0) {
 					displayText.text = mineCount.ToString();
 				} else {
@@ -151,6 +154,14 @@ public class TileModel : MonoBehaviour {
 		}
 	}
 
+	void CheckWinState()
+	{
+		BuildGrid.revealedTiles++;
+		if (BuildGrid.revealedTiles == BuildGrid.tilesToReveal) {
+			BuildGrid.state = "gamewon";
+		}
+	}
+
 	void Explode()
 	{
 		foreach (var tile in BuildGrid.allTiles) {
@@ -162,6 +173,7 @@ public class TileModel : MonoBehaviour {
 				}
 			}
 		}
+		BuildGrid.state = "gameover";
 	}
 
 	void RevealSurrounding()

@@ -1,24 +1,29 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 
 public class BuildGrid : MonoBehaviour {
 
     public TileModel tilePrefab;
-    public int gridWidth = 15, gridHeight = 9;
+    public static int gridWidth = 15, gridHeight = 9;
+	public static int numberOfMines = 20;
     public float tilePadding = 0.0F; // Spacing between tiles.
-    public int numberOfMines = 20;
-    int total_tiles = 0;
-    bool upsideDown = false;
-	string state = "ingame";
+	public int total_tiles = 0;
+	public static int revealedTiles = 0;
+	public static int tilesToReveal = (gridWidth * gridHeight) - numberOfMines;
+	public static int minesRemaining = numberOfMines;
+    public bool upsideDown = false;
+	public static string state = "ingame";
 
     public static TileModel[] allTiles;
     public static List<TileModel> minedTiles;
-    public static List<TileModel> unmindedTiles;
+    public static List<TileModel> unminedTiles;
 
     // Use this for initialization
     void Start () {
         CreateTiles();
+		AssignMines();
 	}
 
     // Displays the triangles for one side
@@ -61,29 +66,41 @@ public class BuildGrid : MonoBehaviour {
 			xOffset = 0.0F;
 			yOffset += yTriOffsetDist + tilePadding;
 		}
-
-        AssignMines();
     }
 
 	void OnGUI()
 	{
-		GUI.Box(new Rect(5, 5, 100, 50), state);
+		if (state == "ingame") {
+			GUI.Box(new Rect(5, 5, 100, 50), "Mines Left: " + minesRemaining);
+		} else if (state == "gamewon") {
+			GUI.Box(new Rect(10,10,200,50), "You win");
+			if (GUI.Button(new Rect(10,70,200,50), "Restart")) {Restart();}
+		} else if (state == "gameover") {
+			GUI.Box(new Rect(10,10,200,50), "You lose");
+			if(GUI.Button(new Rect(10,70,200,50), "Restart")) {Restart();}
+		}
+	}
+
+	void Restart()
+	{
+		state = "loading";
+//		Application.LoadLevel(Application.loadedLevel);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 
     void AssignMines()
     {
-        unmindedTiles = new List<TileModel>(allTiles);
+        unminedTiles = new List<TileModel>(allTiles);
         minedTiles = new List<TileModel>();
-		int numberOfMines = 20;
 
         for (int assigned = 0; assigned < numberOfMines; ++assigned)
         {
-            TileModel currentTile = (TileModel)unmindedTiles[Random.Range(0, unmindedTiles.Count)];
+            TileModel currentTile = (TileModel)unminedTiles[Random.Range(0, unminedTiles.Count)];
 
             currentTile.GetComponent<TileModel>().isMined = true;
 
             minedTiles.Add(currentTile);
-            unmindedTiles.Remove(currentTile);
+            unminedTiles.Remove(currentTile);
         }
     }
 }

@@ -90,10 +90,15 @@ MonoBehaviour:
   ID: 0
   displayText: {fileID: 0}
   tilesPerRow: 0
+  mineCount: 0
+  state: idle
   isMined: 0
   isUpsideDown: 0
   materialIdle: {fileID: 2100000, guid: ed23be3f73d968245a3a9d013fdbef5f, type: 2}
   materialMouseOver: {fileID: 2100000, guid: 022e712c54c634144bae9432cdff520c, type: 2}
+  materialMouseDown: {fileID: 2100000, guid: 8d7c1997c46e9f44d843e3d133b391a8, type: 2}
+  materialFlagged: {fileID: 2100000, guid: 7a14571420d9d2f4dbe8d8136157a4c2, type: 2}
+  adjacentTiles: []
   bottomRightOuter: {fileID: 0}
   bottomRight: {fileID: 0}
   bottom: {fileID: 0}

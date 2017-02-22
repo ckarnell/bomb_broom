@@ -1,19 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TileModel : MonoBehaviour {
 
     public int ID;
     public TextMesh displayText;
     public int tilesPerRow;
+	public int mineCount = 0;
+	public string state = "idle";
     public bool isMined = false;
     public bool isUpsideDown;
 
     public Material materialIdle;
     public Material materialMouseOver;
 	public Material materialMouseDown;
+	public Material materialFlagged;
 
     // Adjacent tiles
+	public List<TileModel> adjacentTiles = new List<TileModel>();
     public TileModel bottomRightOuter; // Only on rightside up triangles.
     public TileModel bottomRight;
     public TileModel bottom;
@@ -39,30 +44,9 @@ public class TileModel : MonoBehaviour {
 		return true;
 	}
 
-    void OnMouseOver()
-    {
-        Renderer renderer = GetComponent<Renderer>();
-        renderer.material = materialMouseOver;
-    }
 
-    void OnMouseExit()
-    {
-        Renderer renderer = GetComponent<Renderer>();
-        renderer.material = materialIdle;
-    }
-
-	void OnMouseDown()
+	void assignAdjacentTiles()
 	{
-		Renderer renderer = GetComponent<Renderer>();
-		renderer.material = materialMouseDown;
-		Debug.Log (ID);
-	}
-
-	// Use this for initialization
-	void Start () {
-		// Name the tiles for much easier debugging
-		gameObject.name = "Tile " + ID.ToString ();
-
 		// Assign bordering tiles
 		TileModel[] tiles = BuildGrid.allTiles;
 		if (isInBounds (tiles, ID - tilesPerRow)) {bottom = tiles [ID - tilesPerRow];}
@@ -82,7 +66,6 @@ public class TileModel : MonoBehaviour {
 					if (isInBounds(tiles, ID - tilesPerRow - 2)) {bottomLeftOuter = tiles[ID - tilesPerRow - 2];}
 				}
 			}
-
 		}
 
 		// Assign upper, outter, and bottom right adjacent tiles
@@ -100,6 +83,89 @@ public class TileModel : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void SetFlag() {
+		Renderer renderer = GetComponent<Renderer>();
+		if (state == "idle") {
+			state = "flagged";
+			renderer.material = materialFlagged;
+		} else if (state == "flagged") {
+			state = "idle";
+			renderer.material = materialMouseOver;
+		}
+	}
+
+	void RevealTile() {
+		Renderer renderer = GetComponent<Renderer>();
+		renderer.material = materialIdle;
+		state = "revealed";
+	}
+
+    void OnMouseOver()
+    {
+		Renderer renderer = GetComponent<Renderer>();
+		if (state == "idle") {
+			if (Input.GetMouseButton(0)) { // True if left click is depressed
+				renderer.material = materialMouseDown;
+			} else if (Input.GetMouseButtonDown(1)) { // True if right click is clicked
+				SetFlag();
+			} else if (Input.GetMouseButtonUp(0)) { // True if left click is released
+				RevealTile();
+			} else {
+				renderer.material = materialMouseOver;
+			}
+		} else if (state == "flagged") {
+			if (Input.GetMouseButtonDown(1)) {
+				SetFlag();
+			}
+		}
+    }
+
+    void OnMouseExit()
+    {
+		if (state == "idle") {
+	        Renderer renderer = GetComponent<Renderer>();
+			renderer.material = materialIdle;
+		}
+    }
+
+	void OnMouseDown()
+	{
+//		Renderer renderer = GetComponent<Renderer>();
+//		renderer.material = materialMouseDown;
+//		Debug.Log ("ID: " + ID.ToString() + "\nMines: " + mineCount.ToString() + " Mined: " + isMined.ToString());
+		Debug.Log("State: " + state);
+	}
+
+	void OnMouseUpAsButton()
+	{
+//		state = "revealed";
+	}
+
+	// Use this for initialization
+	void Start () {
+		// Name the tiles for much easier debugging
+		gameObject.name = "Tile " + ID.ToString ();
+
+		assignAdjacentTiles();
+		// Add the new tiles to the adjacent tile array
+		if (bottomRightOuter) {adjacentTiles.Add(bottomRightOuter);}
+		if (bottomRight)      {adjacentTiles.Add(bottomRight);}
+		if (bottom)           {adjacentTiles.Add(bottom);}
+		if (bottomLeft)       {adjacentTiles.Add(bottomLeft);}
+		if (bottomLeftOuter)  {adjacentTiles.Add(bottomLeftOuter);}
+		if (leftOuter)        {adjacentTiles.Add(leftOuter);}
+		if (left)             {adjacentTiles.Add(left);}
+		if (topLeftOuter)     {adjacentTiles.Add(topLeftOuter);}
+		if (topLeft)          {adjacentTiles.Add(topLeft);}
+		if (top)              {adjacentTiles.Add(top);}
+		if (topRight)         {adjacentTiles.Add(topRight);}
+		if (topRightOuter)    {adjacentTiles.Add(topRightOuter);}
+		if (right)            {adjacentTiles.Add(right);}
+
+		// Count the surrounding adjacent mines
+		foreach (var adjacentTile in adjacentTiles) {if (adjacentTile.isMined) mineCount++;}
 	}
 	
 	// Update is called once per frame

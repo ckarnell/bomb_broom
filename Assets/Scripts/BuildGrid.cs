@@ -84,7 +84,7 @@ public class BuildGrid : MonoBehaviour {
 	void Restart()
 	{
 		state = "loading";
-//		Application.LoadLevel(Application.loadedLevel);
+		revealedTiles = 0;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}
 

@@ -83,7 +83,8 @@ public class BuildGrid : MonoBehaviour {
 
 	void Restart()
 	{
-		state = "loading";
+		state = "ingame";
+		minesRemaining = numberOfMines;
 		revealedTiles = 0;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 	}

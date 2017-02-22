@@ -71,13 +71,14 @@ public class BuildGrid : MonoBehaviour {
 	void OnGUI()
 	{
 		if (state == "ingame") {
-			GUI.Box(new Rect(5, 5, 100, 50), "Mines Left: " + minesRemaining);
+			GUI.Box(new Rect(10, 10, 100, 50), "Mines Left: " + minesRemaining);
+			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 		} else if (state == "gamewon") {
-			GUI.Box(new Rect(10,10,200,50), "You win");
-			if (GUI.Button(new Rect(10,70,200,50), "Restart")) {Restart();}
+			GUI.Box(new Rect(10,10,100,50), "You win");
+			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 		} else if (state == "gameover") {
-			GUI.Box(new Rect(10,10,200,50), "You lose");
-			if(GUI.Button(new Rect(10,70,200,50), "Restart")) {Restart();}
+			GUI.Box(new Rect(10,10,100,50), "You lose");
+			if(GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 		}
 	}
 

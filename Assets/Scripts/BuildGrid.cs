@@ -7,7 +7,7 @@ public class BuildGrid : MonoBehaviour {
     public TileModel tilePrefab;
     public int gridWidth = 15, gridHeight = 9;
     public float tilePadding = 0.0F; // Spacing between tiles.
-    public int numberOfMines = 10;
+    public int numberOfMines = 20;
     int total_tiles = 0;
     bool upsideDown = false;
 

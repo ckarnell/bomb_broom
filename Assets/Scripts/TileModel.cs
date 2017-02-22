@@ -16,6 +16,7 @@ public class TileModel : MonoBehaviour {
     public Material materialMouseOver;
 	public Material materialMouseDown;
 	public Material materialFlagged;
+	public Material materialRevealed;
 
     // Adjacent tiles
 	public List<TileModel> adjacentTiles = new List<TileModel>();
@@ -85,6 +86,10 @@ public class TileModel : MonoBehaviour {
 		}
 	}
 
+	void CountMines() {
+		foreach (var adjacentTile in adjacentTiles) {if (adjacentTile.isMined) mineCount++;}
+	}
+
 	void SetFlag() {
 		Renderer renderer = GetComponent<Renderer>();
 		if (state == "idle") {
@@ -96,10 +101,22 @@ public class TileModel : MonoBehaviour {
 		}
 	}
 
-	void RevealTile() {
+	void RevealTile()
+	{
 		Renderer renderer = GetComponent<Renderer>();
-		renderer.material = materialIdle;
-		state = "revealed";
+		if (!isMined) {
+			state = "revealed";
+			renderer.material = materialRevealed;
+			if (mineCount != 0) {
+				displayText.text = mineCount.ToString();
+			} else {
+				// Recursively reveal nearby tiles if mineCount is 0
+				foreach(var adjacentTile in adjacentTiles) {
+					if (adjacentTile.state == "idle") {adjacentTile.RevealTile();}
+				}
+			}
+		}
+
 	}
 
     void OnMouseOver()
@@ -165,7 +182,8 @@ public class TileModel : MonoBehaviour {
 		if (right)            {adjacentTiles.Add(right);}
 
 		// Count the surrounding adjacent mines
-		foreach (var adjacentTile in adjacentTiles) {if (adjacentTile.isMined) mineCount++;}
+		CountMines();
+
 	}
 	
 	// Update is called once per frame

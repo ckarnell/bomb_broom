@@ -74,7 +74,7 @@ public class BuildGrid : MonoBehaviour {
 	void Awake()
 	{
 		startTime = Time.time;
-		timeText = "0:00.0";
+		state = "ingame";
 	}
 
 	void OnGUI()
@@ -97,12 +97,16 @@ public class BuildGrid : MonoBehaviour {
 			GUI.Box(new Rect(10,10,100,50), "You lose");
 			if(GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 			GUI.Box(new Rect(10, 130, 100, 50), timeText);
+		} else if (state == "loading") {
+			GUI.Box(new Rect(10, 10, 100, 50), "Mines Left: " + minesRemaining);
+			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
+			GUI.Box(new Rect(10, 130, 100, 50), "0:0.0");
 		}
 	}
 
 	void Restart()
 	{
-		state = "ingame";
+		state = "loading";
 		minesRemaining = numberOfMines;
 		revealedTiles = 0;
 		SceneManager.LoadScene(SceneManager.GetActiveScene().name);

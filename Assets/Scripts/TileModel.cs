@@ -158,6 +158,15 @@ public class TileModel : MonoBehaviour {
 	{
 		BuildGrid.revealedTiles++;
 		if (BuildGrid.revealedTiles == BuildGrid.tilesToReveal) {
+			foreach (var tile in BuildGrid.allTiles) {
+				if (tile.state != "revealed") {
+					tile.state = "revealed";
+					if (tile.isMined) {
+						Renderer renderer = tile.GetComponent<Renderer>();
+						renderer.material = materialFlagged;
+					}
+				}
+			}
 			BuildGrid.state = "gamewon";
 		}
 	}

@@ -165,7 +165,7 @@ public class TileModel : MonoBehaviour {
 	void Explode()
 	{
 		foreach (var tile in BuildGrid.allTiles) {
-			if (tile.state == "idle") {
+			if (tile.state != "revealed") {
 				tile.state = "revealed";
 				if (tile.isMined) {
 					Renderer renderer = tile.GetComponent<Renderer>();

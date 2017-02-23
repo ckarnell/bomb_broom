@@ -8,13 +8,16 @@ public class BuildGrid : MonoBehaviour {
     public TileModel tilePrefab;
     public static int gridWidth = 15, gridHeight = 9;
 	public static int numberOfMines = 20;
-    public float tilePadding = 0.0F; // Spacing between tiles.
+    public float tilePadding = 0.0F; // Spacing between tiles
 	public int total_tiles = 0;
 	public static int revealedTiles = 0;
 	public static int tilesToReveal = (gridWidth * gridHeight) - numberOfMines;
 	public static int minesRemaining = numberOfMines;
+	public float startTime;
     public bool upsideDown = false;
 	public static string state = "ingame";
+	public string timeText = "0:00.0";
+	public string testTime;
 
     public static TileModel[] allTiles;
     public static List<TileModel> minedTiles;
@@ -68,17 +71,32 @@ public class BuildGrid : MonoBehaviour {
 		}
     }
 
+	void Awake()
+	{
+		startTime = Time.time;
+		timeText = "0:00.0";
+	}
+
 	void OnGUI()
 	{
 		if (state == "ingame") {
 			GUI.Box(new Rect(10, 10, 100, 50), "Mines Left: " + minesRemaining);
 			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
+			// Get the time and update the timer
+			float guiTime = Time.time - startTime;
+			int minutes = (int) (guiTime / 60);
+			int seconds = (int) (guiTime % 60);
+			int fraction = (int) ((guiTime * 100) % 100);
+			timeText = string.Format("{0}:{1}.{2}", minutes, seconds, fraction);
+			GUI.Box(new Rect(10, 130, 100, 50), timeText);
 		} else if (state == "gamewon") {
 			GUI.Box(new Rect(10,10,100,50), "You win");
 			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
+			GUI.Box(new Rect(10, 130, 100, 50), timeText);
 		} else if (state == "gameover") {
 			GUI.Box(new Rect(10,10,100,50), "You lose");
 			if(GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
+			GUI.Box(new Rect(10, 130, 100, 50), timeText);
 		}
 	}
 

@@ -13,7 +13,7 @@ public class BuildGrid : MonoBehaviour {
 	public static int revealedTiles = 0;
 	public static int tilesToReveal = (gridWidth * gridHeight) - numberOfMines;
 	public static int minesRemaining = numberOfMines;
-	public float startTime;
+	public static float startTime;
     public bool upsideDown = false;
 	public static string state = "ingame";
 	public string timeText = "0:00.0";
@@ -73,8 +73,9 @@ public class BuildGrid : MonoBehaviour {
 
 	void Awake()
 	{
-		startTime = Time.time;
-		state = "ingame";
+		startTime = 0.0F;
+		timeText = "0:0.0";
+		state = "pregame";
 	}
 
 	void OnGUI()
@@ -89,15 +90,22 @@ public class BuildGrid : MonoBehaviour {
 			int fraction = (int) ((guiTime * 100) % 100);
 			timeText = string.Format("{0}:{1}.{2}", minutes, seconds, fraction);
 			GUI.Box(new Rect(10, 130, 100, 50), timeText);
+
 		} else if (state == "gamewon") {
 			GUI.Box(new Rect(10,10,100,50), "You win");
 			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 			GUI.Box(new Rect(10, 130, 100, 50), timeText);
+
 		} else if (state == "gameover") {
 			GUI.Box(new Rect(10,10,100,50), "You lose");
 			if(GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 			GUI.Box(new Rect(10, 130, 100, 50), timeText);
+		} else if (state == "pregame") {
+			GUI.Box(new Rect(10,10,100,50), "Mines Left: " + minesRemaining);
+			if(GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
+			GUI.Box(new Rect(10, 130, 100, 50), timeText);
 		} else if (state == "loading") {
+			
 			GUI.Box(new Rect(10, 10, 100, 50), "Mines Left: " + minesRemaining);
 			if (GUI.Button(new Rect(10,70,100,50), "Restart")) {Restart();}
 			GUI.Box(new Rect(10, 130, 100, 50), "0:0.0");

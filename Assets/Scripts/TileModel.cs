@@ -203,6 +203,10 @@ public class TileModel : MonoBehaviour {
 			} else if (Input.GetMouseButtonDown(1)) { // True if right click is clicked
 				SetFlag();
 			} else if (Input.GetMouseButtonUp(0)) { // True if left click is released
+				if (BuildGrid.state == "pregame") {
+					BuildGrid.state = "ingame";
+					BuildGrid.startTime = Time.time;
+				}
 				RevealTile();
 			} else {
 				renderer.material = materialMouseOver;
